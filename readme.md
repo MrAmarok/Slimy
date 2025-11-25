@@ -1,6 +1,6 @@
 # Slimy
 
-Dvaking Personnal Discord Bot
+MrAmarok Personnal Discord Bot
 
 # Dependance ot install
 ```
