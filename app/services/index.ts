@@ -1,2 +1,2 @@
 export * from "./asynchoneFunction.js";
-export * from "./tiktokScrapper.js";
+export * from "./scrapper/index.js";

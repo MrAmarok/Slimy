@@ -1,6 +1,6 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction } from "discord.js";
 import { SlashCommand } from "@/types";
-import { addServer } from "@/database";
+import { insertServer } from "@/database";
 
 export function addServerCommand(): SlashCommand {
   const data = new SlashCommandBuilder()
@@ -38,12 +38,12 @@ export function addServerCommand(): SlashCommand {
       return;
     }
 
-    addServer(serverId!, serverName!).catch((err) => {
-      console.error("Error adding server:", err);
-      interaction.reply("There was an error while adding the server.");
-    });
+    if (!(await insertServer(serverId, serverName))) {
+      await interaction.reply(`❌ ${serverName} register fail`);
+      return;
+    }
 
-    await interaction.reply("Hey Dvaking! Server added! :)");
+    await interaction.reply(`Hey Dvaking! ${serverName} is register :)`);
   }
 
   return { data: data as SlashCommandBuilder, execute };

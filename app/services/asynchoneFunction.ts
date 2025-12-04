@@ -1,28 +1,38 @@
-import { getAllSM } from "@/database";
-import { SocialType } from "@/types";
+import { ServiceType } from "@/types";
 import { Client } from "discord.js";
 import { tiktokScrapper } from "@/services";
+import { getAllServiceSave } from "@/database";
 
 export async function asyncFunction(bot: Client) {
-  const res = await getAllSM();
+  const services = await getAllServiceSave();
 
-  res.map((rs) => {
-    switch (rs.services_name) {
-      case SocialType.YOUTUBE:
+  if (services == null) {
+    console.log("❌ Internal error!");
+    return;
+  }
+
+  if (services.length < 1) {
+    console.log("❌ No services!");
+    return;
+  }
+
+  services.map(async (service) => {
+    switch (service.services_name) {
+      case ServiceType.Youtube:
         console.log("Youtube");
         break;
-      case SocialType.INSTAGRAM:
+      case ServiceType.Instagram:
         console.log("Instagram");
         break;
-      case SocialType.TWITCH:
+      case ServiceType.Twitch:
         console.log("Twitch");
         break;
-      case SocialType.TIKTOK:
+      case ServiceType.TikTok:
         console.log("Tiktok");
-        tiktokScrapper(bot, rs);
+        await tiktokScrapper(bot, service);
         break;
       default:
-        console.log("Unmatch type!");
+        console.log("❌ Unmatch type!");
         break;
     }
   });

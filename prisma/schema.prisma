@@ -23,22 +23,30 @@ model Server {
     created_at DateTime @default(now())
 
     // Relation inverse
-    watchers SocialMediaWatcher[]
+    watchers SocialMedia[]
 }
 
 // ─────────────────────────────────────────────
 // 🧩 Table: SocialMediaWatcher
 // ─────────────────────────────────────────────
-model SocialMediaWatcher {
-    uuid          String      @id @default(uuid())
-    services_name ServiceName
+model SocialMedia {
+    uuid          String @id @default(uuid())
+    services_name String
     username      String
-    message       String?
-    channel_id    String
-    last_video    String?
-    created_at    DateTime    @default(now())
 
-    // Relation vers Server
-    server_id String
-    server    Server @relation(fields: [server_id], references: [id])
+    server_id       String
+    server          Server            @relation(fields: [server_id], references: [id])
+    YoutubeScrapper YoutubeScrapper[]
+}
+
+model YoutubeScrapper {
+    uuid        String   @id @default(uuid())
+    user_id     String
+    channel_id  String
+    playlist_id String
+    last_video  String
+    created_at  DateTime @default(now())
+
+    socialMedia_uuid String
+    socialMedia      SocialMedia @relation(fields: [socialMedia_uuid], references: [uuid])
 }

@@ -35,7 +35,7 @@ bot.once(Events.ClientReady, (readyClient) => {
     } catch (err) {
       console.error("❌ Erreur dans la tâche périodique :", err);
     }
-  }, 5 * 60 * 1000);
+  }, 1 * 1000);
 });
 
 bot.commands = new Collection();

@@ -1,27 +1,26 @@
 import { GetUserOfSM } from "@/types";
 import { Client } from "discord.js";
-import fetch from "node-fetch";
 
 export async function tiktokScrapper(bot: Client, socialMedia: GetUserOfSM) {
   try {
     const channel = bot.channels.fetch(socialMedia.channel_id);
     if (!channel) return;
 
-    const res = await fetch(
-      `https://www.tiktok.com/@${socialMedia.username}?lang=en`
-    );
 
-    const html = await res.text();
+    // const res = await fetch(
+    //   `https://www.tiktok.com/@${socialMedia.username}`
+    // );
 
-    const jsonMatch = html.match(
-      /<script id="__NEXT_DATA__" type="application\/json">(.+)<\/script>/
-    );
+    // const html = await res.text();
 
-    if (!jsonMatch) return;
+    // const jsonMatch = html.match(
+    //   /<script id="__NEXT_DATA__" type="application\/json">(.+)<\/script>/
+    // );
 
-    const jsonData = JSON.parse(jsonMatch[1]);
+    // console.log("JsonData:", html);
+    // if (!jsonMatch) return;
 
-    console.log("JsonData:", jsonData);
+    // const jsonData = JSON.parse(jsonMatch[1]);
 
     //     const videos =
     //       jsonData.props.pageProps.userData.user.videoList?.videos || [];

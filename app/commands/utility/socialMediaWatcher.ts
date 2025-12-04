@@ -8,7 +8,7 @@ import {
 } from "discord.js";
 import { SlashCommand } from "@/types";
 import { StringSelectMenuOptionBuilder } from "@discordjs/builders";
-import { SocialType } from "@/types";
+import { ServiceType } from "@/types";
 
 export function socialMediaWatcher(): SlashCommand {
   const data = new SlashCommandBuilder()
@@ -23,7 +23,7 @@ export function socialMediaWatcher(): SlashCommand {
     );
 
   async function execute(interaction: ChatInputCommandInteraction) {
-    const channel = interaction.options.getChannel("channel") as TextChannel;
+    let channel = interaction.options.getChannel("channel") as TextChannel;
 
     if (!channel) {
       await interaction.reply("Error occure on the channel recuperation");
@@ -31,24 +31,24 @@ export function socialMediaWatcher(): SlashCommand {
     }
 
     const socialType = new StringSelectMenuBuilder()
-      .setCustomId(`select_social_${channel}_${interaction.user.id}`)
+      .setCustomId(`select_social_${channel.id}_${interaction.user.id}`)
       .setPlaceholder("Select your social media")
       .addOptions(
         {
-          label: "Instagram",
-          value: SocialType.INSTAGRAM,
+          label: ServiceType.Instagram,
+          value: ServiceType.Instagram,
         },
         {
-          label: "TikTok",
-          value: SocialType.TIKTOK,
+          label: ServiceType.TikTok,
+          value: ServiceType.TikTok,
         },
         {
-          label: "Twitch",
-          value: SocialType.TWITCH,
+          label: ServiceType.Twitch,
+          value: ServiceType.Twitch,
         },
         {
-          label: "YouTube",
-          value: SocialType.YOUTUBE,
+          label: ServiceType.Youtube,
+          value: ServiceType.Youtube,
         }
       );
     await interaction.reply({
