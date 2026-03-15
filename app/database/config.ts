@@ -6,8 +6,9 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
-
-export async function query<T extends import("pg").QueryResultRow = import("pg").QueryResultRow>(text: string, params?: any[]): Promise<import("pg").QueryResult<T>> {
+export async function query<
+  T extends import("pg").QueryResultRow = import("pg").QueryResultRow,
+>(text: string, params?: any[]): Promise<import("pg").QueryResult<T>> {
   return pool.query<T>(text, params);
 }
 
@@ -16,12 +17,12 @@ export async function query<T extends import("pg").QueryResultRow = import("pg")
  * @param text - La requête SQL
  * @param params - Les paramètres de la requête
  */
-export async function update(text: string, params?: any[]): Promise<import("pg").QueryResult> {
+export async function update(
+  text: string,
+  params?: any[],
+): Promise<import("pg").QueryResult> {
   return pool.query(text, params);
 }
-
-
-
 
 /**
  * Crée les tables passées en paramètre
