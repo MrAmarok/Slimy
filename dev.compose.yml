@@ -12,7 +12,11 @@ services:
     ports:
       - "${POSTGRES_PORT}:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} -h localhost"]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} -h localhost",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -22,8 +26,8 @@ services:
     container_name: slimy-bot
     restart: unless-stopped
     environment:
-      TOKEN: ${TOKEN}
-      APPID: ${APPID}
+      DEVTOKEN: ${DEVTOKEN}
+      DEVAPPID: ${DEVAPPID}
       GUILDID: ${GUILDID}
       POSTGRES_URL: ${POSTGRES_URL}
       TWITCH_CLIENT_ID: ${TWITCH_CLIENT_ID}
