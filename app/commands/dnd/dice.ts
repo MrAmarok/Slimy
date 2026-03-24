@@ -2,7 +2,7 @@ import { SlashCommandBuilder, ChatInputCommandInteraction } from "discord.js";
 import { diceGenerator } from "@/components";
 import { SlashCommand } from "@/types";
 
-export function dice(): SlashCommand {
+function dice(): SlashCommand {
   const data = new SlashCommandBuilder()
     .setName("dice")
     .setDescription("/dice nbr of faces [nbr of dice]")

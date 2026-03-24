@@ -1,11 +1,11 @@
-import { createTables, servers } from "@/database";
+import { createTables, socialMedia } from "./index.js";
 
 export async function initTables(): Promise<void> {
   console.log("Start init tables");
 
   try {
-    await createTables(servers);
-    console.log("Tables server created!");
+    await createTables(socialMedia);
+    console.log("Tables social_media created!");
   } catch (error) {
     console.error("Error creating tables:", error);
   }

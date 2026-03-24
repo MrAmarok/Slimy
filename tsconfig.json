@@ -11,7 +11,8 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "paths": {
-      "@/database": ["./app/database/index.ts"],
+      "@/database": ["./app/server/database/index.ts"],
+      "@/server": ["./app/server/index.ts"],
       "@/types": ["./app/types/index.ts"],
       "@/utils": ["./app/utils/index.ts"],
       "@/components": ["./app/components/index.ts"],

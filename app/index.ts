@@ -1,20 +1,31 @@
+import "dotenv/config";
+
 import {
   Client,
   GatewayIntentBits,
   Events,
   Collection,
   MessageFlags,
+  User,
 } from "discord.js";
 
-import { SlashCommand } from "@/types";
-import { loadCommands, getDirname } from "@/utils";
-
+import { SlashCommand, UserSession } from "@/types";
+import {
+  loadCommands,
+  getDirname,
+  chatInputInteraction,
+  stringSelectMenuInteraction,
+  modalSubmitInteraction,
+} from "@/utils";
 import { deployCommand } from "./deployCommands.js";
+import { initTables, getUserSessions } from "@/server";
 
+let userSessions: UserSession = { twitchToken: "" };
 
-import "dotenv/config";
+await getUserSessions(userSessions);
 
 deployCommand();
+initTables();
 
 const bot = new Client({ intents: [GatewayIntentBits.Guilds] });
 
@@ -41,31 +52,12 @@ for (const command of loadedCommands) {
 }
 
 bot.on(Events.InteractionCreate, async (interaction) => {
-  if (!interaction.isChatInputCommand()) return;
-
-  const command = interaction.client.commands.get(interaction.commandName);
-  if (!command) {
-    console.error(
-      `❌ No command matching ${interaction.commandName} was found.`
-    );
-    return;
-  }
-
-  try {
-    await command.execute(interaction);
-  } catch (error) {
-    console.error(error);
-    if (interaction.replied || interaction.deferred) {
-      await interaction.followUp({
-        content: "There was an error while executing this command!",
-        flags: MessageFlags.Ephemeral,
-      });
-    } else {
-      await interaction.reply({
-        content: "There was an error while executing this command!",
-        flags: MessageFlags.Ephemeral,
-      });
-    }
+  if (interaction.isChatInputCommand()) {
+    await chatInputInteraction(interaction);
+  } else if (interaction.isStringSelectMenu()) {
+    await stringSelectMenuInteraction(interaction);
+  } else if (interaction.isModalSubmit()) {
+    await modalSubmitInteraction(interaction);
   }
 });
 

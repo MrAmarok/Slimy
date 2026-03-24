@@ -1,9 +1,17 @@
 import pkg from "pg";
 const { Pool } = pkg;
 
+const databaseUrl = process.env.DATABASE_URL ?? process.env.POSTGRES_URL;
+
+if (!databaseUrl) {
+  throw new Error(
+    "Missing database URL: set DATABASE_URL or POSTGRES_URL in environment.",
+  );
+}
+
 // Création de la connexion PostgreSQL
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: databaseUrl,
 });
 
 export async function query<
