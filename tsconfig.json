@@ -16,6 +16,7 @@
       "@/server": ["./app/server/index.ts"],
       "@/server/*": ["./app/server/*"],
       "@/types": ["./app/types/index.ts"],
+      "@/types/*": ["./app/types/*"],
       "@/utils": ["./app/utils/index.ts"],
       "@/components": ["./app/components/index.ts"],
       "@/components/*": ["./app/components/*"],

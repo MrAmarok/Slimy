@@ -36,7 +36,6 @@ export async function modalTwitch(
     )
     .setTextInputComponent(usernameInput);
 
-  console.log("channels:", channels);
   const channelSelector = new StringSelectMenuBuilder()
     .setCustomId("channel_selector")
     .setPlaceholder("Select a channel to post the announcement")

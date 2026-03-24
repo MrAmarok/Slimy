@@ -28,9 +28,10 @@ let userSessions: UserSession = {
 
 await connectDatabase();
 await getUserSessions(userSessions);
-// setInterval(() => twitchCallLoop(userSessions), 10000);
 
 deployCommand();
+setInterval(() => twitchCallLoop(userSessions, bot), 6000);
+
 
 const bot = new Client({ intents: [GatewayIntentBits.Guilds] });
 declare module "discord.js" {
