@@ -1,25 +1,18 @@
 import "dotenv/config";
+import { Client, GatewayIntentBits, Events, Collection } from "discord.js";
 
 import {
-  Client,
-  GatewayIntentBits,
-  Events,
-  Collection,
-  MessageFlags,
-  User,
-} from "discord.js";
-
-import { SlashCommand, UserSession } from "@/types";
-import {
-  loadCommands,
-  getDirname,
+  twitchCallLoop,
   chatInputInteraction,
   stringSelectMenuInteraction,
   modalSubmitInteraction,
-} from "@/utils";
-import { deployCommand } from "./deployCommands.js";
+} from "@/src";
+
+import { SlashCommand, UserSession } from "@/types";
+import { loadCommands, getDirname } from "@/utils";
 import { getUserSessions, connectDatabase } from "@/server";
-import { twitchCallLoop } from "./utils/loop.js";
+
+import { deployCommand } from "./deployCommands.js";
 
 let userSessions: UserSession = {
   twitchToken: "",
@@ -31,7 +24,6 @@ await getUserSessions(userSessions);
 
 deployCommand();
 setInterval(() => twitchCallLoop(userSessions, bot), 6000);
-
 
 const bot = new Client({ intents: [GatewayIntentBits.Guilds] });
 declare module "discord.js" {

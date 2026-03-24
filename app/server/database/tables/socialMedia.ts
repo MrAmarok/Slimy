@@ -148,6 +148,26 @@ export async function updateSocialMediaUsername(
   return true;
 }
 
+export async function updateAllSocialMediaInformation(
+  oldUsername: string,
+  newData: Omit<SocialMediaEntry, "uuid" | "message_sended" | "platform">,
+): Promise<boolean> {
+  const res = await query(
+    "UPDATE social_media SET username = $1, message = $2, channel_id = $3 WHERE username = $4",
+    [
+      newData.username,
+      newData.message,
+      newData.channel_id,
+      oldUsername,
+    ],
+  );
+  if (!res || res.rowCount === 0) {
+    console.warn(`Failed to update all information for username: ${oldUsername}`);
+    return false;
+  }
+  return true;
+}
+
 // DELETE functions
 export async function deleteSocialMedia(username: string): Promise<boolean> {
   const res = await query("DELETE FROM social_media WHERE username = $1", [username]);

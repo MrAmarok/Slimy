@@ -14,27 +14,50 @@ export async function modalTwitch(
   selectedStyle: string,
   client: Client,
   guildId: string,
+  username?: string,
 ) {
   const channels = await getGuildChannels(client, guildId);
   if (!channels) {
     throw new Error("Unable to fetch channels for the guild.");
   }
 
-  const modal = new ModalBuilder()
-    .setCustomId(`modal_${selectedStyle}`)
-    .setTitle("Forms Example");
+  let modal: ModalBuilder;
+  let usernameLabel: LabelBuilder;
 
-  const usernameInput = new TextInputBuilder()
-    .setCustomId("username_input")
-    .setStyle(TextInputStyle.Short)
-    .setPlaceholder(`Enter your ${selectedStyle} username`);
+  if (!username) {
+    modal = new ModalBuilder()
+      .setCustomId(`modal_${selectedStyle}`)
+      .setTitle("Twitch Announcement Configuration");
 
-  const usernameLabel = new LabelBuilder()
-    .setLabel(`What's your ${selectedStyle} username?`)
-    .setDescription(
-      "Enter your username for the selected social media platform.",
-    )
-    .setTextInputComponent(usernameInput);
+    const usernameInput = new TextInputBuilder()
+      .setCustomId("username_input")
+      .setStyle(TextInputStyle.Short)
+      .setPlaceholder(`Enter your ${selectedStyle} username`);
+
+    usernameLabel = new LabelBuilder()
+      .setLabel(`What's your ${selectedStyle} username?`)
+      .setDescription(
+        "Enter your username for the selected social media platform.",
+      )
+      .setTextInputComponent(usernameInput);
+  } else {
+    modal = new ModalBuilder()
+      .setCustomId(`modal_update_${selectedStyle}_${username}`)
+      .setTitle("Twitch Announcement Configuration");
+
+    const usernameInput = new TextInputBuilder()
+      .setCustomId("username_input")
+      .setStyle(TextInputStyle.Short)
+      .setPlaceholder(`Enter your ${selectedStyle} username`)
+      .setValue(username);
+
+    usernameLabel = new LabelBuilder()
+      .setLabel(`Update ${username} announcement for ${selectedStyle}`)
+      .setDescription(
+        "Enter your username for the selected social media platform.",
+      )
+      .setTextInputComponent(usernameInput);
+  }
 
   const channelSelector = new StringSelectMenuBuilder()
     .setCustomId("channel_selector")
@@ -62,7 +85,7 @@ export async function modalTwitch(
     .setLabel(`What's your ${selectedStyle} annonce message?`)
     .setDescription("Enter your message displayed on the announcement.")
     .setTextInputComponent(messageInput);
-  
+
   modal.addLabelComponents(usernameLabel, channelLabel, messageLabel);
   return modal;
 }
