@@ -7,8 +7,8 @@ import {
 import "dotenv/config";
 import { loadCommands, getDirname } from "@/utils";
 
-const token = process.env.DEVTOKEN || process.env.TOKEN;
-const appId = process.env.DEVAPPID || process.env.APPID;
+const token = process.env.TOKEN || process.env.DEVTOKEN;
+const appId = process.env.APPID || process.env.DEVAPPID;
 const guildId = process.env.GUILDID;
 
 if (!token) {
