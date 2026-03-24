@@ -1,0 +1,2 @@
+ALTER TABLE social_media 
+ADD COLUMN message_sended BOOLEAN DEFAULT FALSE;

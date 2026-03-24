@@ -5,7 +5,7 @@ import {
   StringSelectMenuInteraction,
 } from "discord.js";
 import { modalTwitch } from "../components/modalTwitch.js";
-import { addSocialMedia, deleteSocialMedia } from "../server/index.js";
+import { addSocialMedia, deleteSocialMedia } from "@/database";
 
 export async function chatInputInteraction(
   interaction: ChatInputCommandInteraction,

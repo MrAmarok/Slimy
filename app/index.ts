@@ -18,17 +18,21 @@ import {
   modalSubmitInteraction,
 } from "@/utils";
 import { deployCommand } from "./deployCommands.js";
-import { initTables, getUserSessions } from "@/server";
+import { getUserSessions, connectDatabase } from "@/server";
+import { twitchCallLoop } from "./utils/loop.js";
 
-let userSessions: UserSession = { twitchToken: "" };
+let userSessions: UserSession = {
+  twitchToken: "",
+  twitchClientId: process.env.TWITCH_CLIENT_ID || "",
+};
 
+await connectDatabase();
 await getUserSessions(userSessions);
+// setInterval(() => twitchCallLoop(userSessions), 10000);
 
 deployCommand();
-initTables();
 
 const bot = new Client({ intents: [GatewayIntentBits.Guilds] });
-
 declare module "discord.js" {
   interface Client {
     commands: Collection<string, SlashCommand>;

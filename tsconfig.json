@@ -12,10 +12,13 @@
     "resolveJsonModule": true,
     "paths": {
       "@/database": ["./app/server/database/index.ts"],
+      "@/database/*": ["./app/server/database/*"],
       "@/server": ["./app/server/index.ts"],
+      "@/server/*": ["./app/server/*"],
       "@/types": ["./app/types/index.ts"],
       "@/utils": ["./app/utils/index.ts"],
       "@/components": ["./app/components/index.ts"],
+      "@/components/*": ["./app/components/*"],
       "@/asset/*": ["./asset/*"]
     }
   },

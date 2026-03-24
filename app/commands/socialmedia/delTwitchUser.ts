@@ -7,7 +7,7 @@ import {
   MessageFlags
 } from "discord.js";
 import { SlashCommand } from "@/types";
-import { getSocialMediaByPlatform } from "../../server/index.js";
+import { getSocialMediaByPlatform } from "@/database/tables/socialMedia.js";
 
 function delTwitchUser(): SlashCommand {
   const data = new SlashCommandBuilder()

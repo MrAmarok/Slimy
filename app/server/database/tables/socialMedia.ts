@@ -1,19 +1,6 @@
-import { query } from "../../index.js";
+import { query } from "@/server";
 import { v4 as uuidv4 } from "uuid";
 import { SocialMediaEntry } from "../../../types/SQLTable.js";
-
-// SQL pour créer la table social_media
-export const socialMedia = `
-CREATE TABLE IF NOT EXISTS social_media (
-    uuid UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    platform VARCHAR(50) NOT NULL,
-    username VARCHAR(100) NOT NULL,
-    message TEXT NOT NULL,
-    channel_id VARCHAR(50) NOT NULL,
-   
-  UNIQUE (platform, username)
-);
-`;
 
 /**
  * Adds a new social media entry to the database.
@@ -38,7 +25,10 @@ export async function addSocialMedia(
   );
   console.log("Add social media result:", res);
   if (!res || res.rowCount === 0)
-    return { success: false, message: "Failed to add social media entry, user already exists." };
+    return {
+      success: false,
+      message: "Failed to add social media entry, user already exists.",
+    };
   return { success: true, message: "Social media entry added successfully." };
 }
 
