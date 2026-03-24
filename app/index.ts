@@ -22,6 +22,8 @@ let userSessions: UserSession = {
 await connectDatabase();
 await getUserSessions(userSessions);
 
+const discordToken = process.env.DEVTOKEN || process.env.DISCORD_TOKEN;
+
 deployCommand();
 setInterval(() => twitchCallLoop(userSessions, bot), 6000);
 
@@ -58,4 +60,4 @@ bot.on(Events.InteractionCreate, async (interaction) => {
   }
 });
 
-bot.login(process.env.DEVTOKEN);
+bot.login(discordToken);
