@@ -22,8 +22,6 @@ services:
       DATABASE_URL: ${POSTGRES_URL}
     depends_on:
       - database
-    volumes:
-      - ./:/app
 
 volumes:
   slimy_data:
