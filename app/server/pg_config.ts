@@ -5,7 +5,7 @@ const databaseUrl = process.env.POSTGRES_URL;
 
 if (!databaseUrl) {
   throw new Error(
-    "Missing database URL: set DATABASE_URL or POSTGRES_URL in environment.",
+    "Missing database URL: set POSTGRES_URL in environment.",
   );
 }
 
