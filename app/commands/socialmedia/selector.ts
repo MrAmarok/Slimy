@@ -1,22 +1,23 @@
-import { 
-  SlashCommandBuilder, 
+import {
+  SlashCommandBuilder,
   ChatInputCommandInteraction,
   ActionRowBuilder,
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
-  MessageFlags
+  MessageFlags,
+  PermissionFlagsBits,
 } from "discord.js";
 import { SlashCommand } from "@/types";
 
 function socialMediaSelector(): SlashCommand {
   const data = new SlashCommandBuilder()
-    .setName("socialmediaselector")
-    .setDescription("Select a social media platform");
+    .setName("socialmedia_selector")
+    .setDescription("Select a social media platform")
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
 
   async function execute(
-    interaction: ChatInputCommandInteraction
+    interaction: ChatInputCommandInteraction,
   ): Promise<void> {
-
     const selectMenu = new StringSelectMenuBuilder()
       .setCustomId("social_media_selector")
       .setPlaceholder("Choisis une plateforme sociale...")
@@ -28,11 +29,13 @@ function socialMediaSelector(): SlashCommand {
           .setEmoji("📺"),
       );
 
-    const row = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(selectMenu);
+    const row = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
+      selectMenu,
+    );
 
     await interaction.reply({
       components: [row],
-      flags: MessageFlags.Ephemeral, 
+      flags: MessageFlags.Ephemeral,
     });
   }
 

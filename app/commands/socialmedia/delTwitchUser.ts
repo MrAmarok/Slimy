@@ -4,15 +4,17 @@ import {
   ActionRowBuilder,
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
-  MessageFlags
+  MessageFlags,
+  PermissionFlagsBits
 } from "discord.js";
-import { SlashCommand } from "@/types";
 import { getSocialMediaByPlatform } from "@/database/tables/socialMedia.js";
+import { SlashCommand } from "@/types";
 
 function delTwitchUser(): SlashCommand {
   const data = new SlashCommandBuilder()
-    .setName("del_twitch_user")
-    .setDescription("Delete a Twitch user from the database");
+    .setName("twitch_del_user")
+    .setDescription("Delete a Twitch user from the database")
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
 
   async function execute(
     interaction: ChatInputCommandInteraction
@@ -40,7 +42,7 @@ function delTwitchUser(): SlashCommand {
     });
   }
 
-  return { data: data as SlashCommandBuilder, execute };
+  return { data: data, execute };
 }
 
 export default delTwitchUser();

@@ -35,7 +35,7 @@ export async function twitchCallLoop(
 
       if (data.data && data.data.length > 0 && !info.message_sended) {
         await updateSocialMediaMessageSend(info.username, true);
-        const message = twitchMessageAnnonce(data.data[0]);
+        const message = twitchMessageAnnonce({... data.data[0], bot_name: client.user?.username || "Slimy Bot"});
         
         client.channels.fetch(info.channel_id).then((channel) => {
           if (channel && channel.isTextBased()) {

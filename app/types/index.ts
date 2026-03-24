@@ -1,3 +1,3 @@
 export * from "./SlashCommand.js";
-export * from "./Server.js";
-export * from "./Discord.js";
+export * from "./SQLTable.js";
+export * from "./bot.js";

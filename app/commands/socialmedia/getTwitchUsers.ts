@@ -1,24 +1,26 @@
-import { 
-  SlashCommandBuilder, 
+import {
+  SlashCommandBuilder,
   ChatInputCommandInteraction,
+  PermissionFlagsBits,
 } from "discord.js";
-import { SlashCommand } from "@/types";
+import { SlashCommand, TEmbedMessageBuilder, SocialMediaEntry } from "@/types";
 import { getSocialMediaByPlatform } from "@/database/tables/socialMedia.js";
+import { embedMessageBuilder } from "@/components/embedMessageBuilder.js";
 
 function getTwitchUsers(): SlashCommand {
   const data = new SlashCommandBuilder()
-    .setName("annonce_get_user_twitch")
-    .setDescription("Get all the twitch user config for the annonce server");
+    .setName("twitch_get_user")
+    .setDescription("Get all the twitch user config for the annonce server")
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
 
   async function execute(
-    interaction: ChatInputCommandInteraction
+    interaction: ChatInputCommandInteraction,
   ): Promise<void> {
     const res = await getSocialMediaByPlatform("twitch");
-
+    const embedMessage = embedMessageBuilder(messageBuilder(res, interaction.client.user.username));
+    
     await interaction.reply({
-      content: res.length > 0 
-        ? `Voici les utilisateurs Twitch enregistrés:\n${res.map(entry => `- ${entry.username} (Channel ID: ${entry.channel_id})`).join("\n")}`
-        : "Aucun utilisateur Twitch trouvé.", 
+      embeds: [embedMessage],
     });
   }
 
@@ -26,3 +28,41 @@ function getTwitchUsers(): SlashCommand {
 }
 
 export default getTwitchUsers();
+
+
+function messageBuilder(res:  SocialMediaEntry[], username: string): TEmbedMessageBuilder {
+
+  const message: TEmbedMessageBuilder = {
+      title: "Twitch Account List",
+      description:
+        res.length > 0
+          ? "Here are the registered Twitch accounts:"
+          : "No registered Twitch accounts found.",
+      fields: [
+        {
+          name: "Accounts Twitch",
+          value:
+            res.length > 0
+              ? res.map((entry) => `- **${entry.username}** `).join("\n")
+              : "No registered Twitch accounts found.",
+            inline: true
+        },
+        {
+          name: "Announcement Channels",
+          value:
+            res.length > 0
+              ? res.map((entry) => `- <#${entry.channel_id}>`).join("\n")
+              : "No announcement channels found.",
+          inline: true
+        },
+      ],
+      author: {
+        name: username,
+      },
+      color: "#9146FF",
+      footer: {
+        text: `${username} - Twitch Account List`,
+      },
+    };
+    return message;
+}

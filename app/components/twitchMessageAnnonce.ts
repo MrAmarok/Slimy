@@ -8,6 +8,7 @@ interface TwitchStreamData {
   viewer_count: number;
   started_at: string;
   thumbnail_url: string;
+  bot_name: string;
 }
 
 export function twitchMessageAnnonce({
@@ -18,6 +19,7 @@ export function twitchMessageAnnonce({
   user_login,
   user_name,
   viewer_count,
+  bot_name
 }: TwitchStreamData): EmbedBuilder {
   const imageUrl = thumbnail_url
     .replace("{width}", "1280")
@@ -42,15 +44,5 @@ export function twitchMessageAnnonce({
       { name: "Viewers", value: viewer_count.toString(), inline: true },
     )
     .setImage(imageUrl)
-    .setFooter({ text: ` • ${formattedDate}` });
+    .setFooter({ text: `${bot_name} • ${formattedDate}` });
 }
-
-// Exemple d'utilisation dans ton code Discord.js
-/*
-client.on('messageCreate', async (message) => {
-    if (message.content === '!testembed') {
-        const embed = createTwitchNotificationEmbed(streamData);
-        await message.channel.send({ embeds: [embed] });
-    }
-});
-*/
