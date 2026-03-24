@@ -15,8 +15,7 @@ export async function runMigrations(dbClient: Client) {
   const { rows } = await dbClient.query('SELECT filename FROM _migrations');
   const executedMigrations = rows.map(row => row.filename);
 
-  const __dirname = getDirname(import.meta.url);
-  const migrationsDir = path.join(__dirname, '/migrations'); 
+  const migrationsDir = path.join('./migrations'); 
   const files = fs.readdirSync(migrationsDir).sort();
   for (const file of files) {
     if (file.endsWith('.sql') && !executedMigrations.includes(file)) {
