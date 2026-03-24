@@ -12,8 +12,11 @@ if (!databaseUrl) {
 const db = new PgClient({ connectionString: databaseUrl });
 
 export async function connectDatabase() {
+  console.log("💾 Connecting to database...");
+  
   await db.connect();
-  console.log("💾 Connected to database");
+  console.log("✅ Connected to database successfully!");
+  
   await runMigrations(db); 
 }
 

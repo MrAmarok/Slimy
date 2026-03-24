@@ -18,9 +18,7 @@ export async function runMigrations(dbClient: Client) {
   const __dirname = getDirname(import.meta.url);
   const migrationsDir = path.join(__dirname, '/migrations'); 
   const files = fs.readdirSync(migrationsDir).sort();
-  console.log('Executed migrations:', executedMigrations);
   for (const file of files) {
-    console.log(' ficher', file, file.endsWith('.sql'), executedMigrations.includes(file), executedMigrations);
     if (file.endsWith('.sql') && !executedMigrations.includes(file)) {
 
       console.log(`💾 Applying the update: ${file}...`);
@@ -41,5 +39,4 @@ export async function runMigrations(dbClient: Client) {
       }
     }
   }
-  console.log(`💾 Database updated successfully !`);
 }

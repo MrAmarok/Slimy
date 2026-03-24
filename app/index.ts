@@ -40,7 +40,7 @@ declare module "discord.js" {
 }
 
 bot.once(Events.ClientReady, (readyClient) => {
-  console.log(`✅ Ready! Logged in as ${readyClient.user.tag}`);
+  console.log(`\n🤖 Ready! Logged in as ${readyClient.user.tag}`);
 });
 
 bot.commands = new Collection();

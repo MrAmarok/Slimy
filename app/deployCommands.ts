@@ -27,7 +27,7 @@ export async function deployCommand(): Promise<void> {
   // Déploiement des commandes
   try {
     console.log(
-      `🚀 Started refreshing ${commands.length} application (/) commands.`
+      `\n🚀 Started refreshing ${commands.length} application (/) commands.`
     );
 
     if (!process.env.DEVAPPID) {

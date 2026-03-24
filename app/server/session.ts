@@ -3,6 +3,7 @@ import { UserSession } from "@/types";
 let userSessions: UserSession;
 
 export async function getTwitchToken() {
+  console.log("🔑 Fetching Twitch token...");
   const clientId = process.env.TWITCH_CLIENT_ID;
   const clientSecret = process.env.TWITCH_CLIENT_SECRET;
 
@@ -26,14 +27,16 @@ export async function getTwitchToken() {
 
   if (!response.ok)
     throw new Error(`Failed to get Twitch token: ${response.statusText}`);
-
+  else 
+    console.log("✅ Twitch token fetched successfully!");
   const data = await response.json();
   return data.access_token;
 }
 
 export async function getUserSessions(userSessions: UserSession) {
+  console.log("\n🔑 Initializing user sessions...");
   const token = await getTwitchToken();
 
   userSessions.twitchToken = token;
-  console.log("User sessions initialized with Twitch token");
+  console.log("✅ User sessions initialized");
 }
