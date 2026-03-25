@@ -44,6 +44,7 @@ const activities = {
 
 export function getBotActivity(streamInfo: StreamInfo[], bot: Client<true>) {
   let random = Math.floor(Math.random() * activities.content.length);
+  console.log(streamInfo.length);
   setInterval(async () => {
     console.log(streamInfo.length);
     if (streamInfo.length === 0) {
