@@ -12,7 +12,7 @@ import {
   chatInputInteraction,
   stringSelectMenuInteraction,
   modalSubmitInteraction,
-  getBotActivity
+  getBotActivity,
 } from "@/src";
 
 import { SlashCommand, StreamInfo, UserSession } from "@/types";
@@ -28,7 +28,7 @@ await getUserSessions(userSessions);
 const discordToken = process.env.TOKEN || process.env.DEVTOKEN;
 
 deployCommand();
-setInterval(() => twitchCallLoop(bot), 20000);
+setInterval(() => twitchCallLoop(bot), 60000);
 
 const bot = new Client({ intents: [GatewayIntentBits.Guilds] });
 declare module "discord.js" {
@@ -39,7 +39,9 @@ declare module "discord.js" {
 
 bot.once(Events.ClientReady, (readyClient) => {
   console.log(`\n🤖 Ready! Logged in as ${readyClient.user.tag}`);
-  getBotActivity(readyClient);
+  let random = Math.floor(Math.random() * 5);
+  getBotActivity(readyClient, random);
+  setInterval(() => getBotActivity(readyClient, random), 40000);
 });
 
 bot.commands = new Collection();

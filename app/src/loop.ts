@@ -5,11 +5,9 @@ import {
 import { refreshTwitchToken } from "@/server/session.js";
 import { twitchMessageAnnonce } from "@/components/twitchMessageAnnonce.js";
 import { Client, TextChannel } from "discord.js";
-import { states, userSessions} from "@/utils/globals.js";
+import { states, userSessions } from "@/utils/globals.js";
 
-export async function twitchCallLoop(
-  client: Client,
-) {
+export async function twitchCallLoop(client: Client) {
   const twitchInfo = await getSocialMediaByPlatform("twitch");
   states.streamInfos = states.streamInfos.filter((info) => {
     return twitchInfo.some((s) => s.username === info.username);
@@ -26,14 +24,28 @@ export async function twitchCallLoop(
           },
         },
       );
-      if (!res.ok) return false;
+      if (!res.ok) {
+        if (res.status === 401) {
+          console.error(
+            `❌ Unauthorized: Twitch token might be expired. Status: ${res.statusText}`,
+          );
+          return false;
+        } else {
+          console.error(
+            `❌ Failed to fetch Twitch stream info for ${info.username}: ${res.statusText}`,
+          );
+          return true;
+        }
+      }
       const data = await res.json();
 
       if (data.data && data.data.length === 0 && !info.message_sended) {
         return true;
       } else if (data.data && data.data.length === 0 && info.message_sended) {
         await updateSocialMediaMessageSend(info.username, false);
-        if (states.streamInfos.some((stream) => stream.username === info.username)) {
+        if (
+          states.streamInfos.some((stream) => stream.username === info.username)
+        ) {
           states.streamInfos = states.streamInfos.filter(
             (stream) => stream.username !== info.username,
           );

@@ -4,7 +4,7 @@ export async function getUserSessions(userSessions: UserSession) {
   console.log("\n🔑 Initializing user sessions...");
   const token = await getTwitchToken();
 
-  userSessions.twitchToken = "token";
+  userSessions.twitchToken = token;
   console.log("✅ User sessions initialized");
 }
 

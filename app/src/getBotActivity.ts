@@ -1,5 +1,5 @@
 import { ActivityType, Client } from "discord.js";
-import { states, userSessions } from "@/utils/globals.js";
+import { states } from "@/utils/globals.js";
 
 const activities = {
   lastActivity: 0,
@@ -41,61 +41,57 @@ const activities = {
   nbrOfStreams: 0,
 };
 
-export function getBotActivity(bot: Client<true>) {
-  let random = Math.floor(Math.random() * activities.content.length);
-  console.log(states.streamInfos.length);
-  setInterval(async () => {
-    console.log(states.streamInfos.length);
-    if (states.streamInfos.length === 0) {
-      if (activities.nbrOfStreams !== 0) {
-        activities.nbrOfStreams = 0;
-        random = activities.lastActivity;
-        while (random === activities.lastActivity) {
-          random = Math.floor(Math.random() * activities.content.length);
-        }
+export function getBotActivity(bot: Client<true>, random: number) {
+  console.log("states.streamInfos.length: ", states.streamInfos.length);
+  if (states.streamInfos.length === 0) {
+    if (activities.nbrOfStreams !== 0) {
+      activities.nbrOfStreams = 0;
+      random = activities.lastActivity;
+      while (random === activities.lastActivity) {
+        random = Math.floor(Math.random() * activities.content.length);
       }
-      console.log(activities.content[random].name);
+    }
+    bot.user.setPresence({
+      activities: [
+        {
+          name: activities.content[random].name,
+          state: activities.content[random].state,
+          type: activities.content[random].type,
+          url: activities.content[random].url,
+        },
+      ],
+      status: "dnd",
+    });
+  } else {
+    activities.nbrOfStreams = states.streamInfos.length;
+    if (
+      states.streamInfos.find((stream) => stream.username === "arctyx_esporttv")
+    ) {
       bot.user.setPresence({
         activities: [
           {
-            name: activities.content[random].name,
-            state: activities.content[random].state,
-            type: activities.content[random].type,
-            url: activities.content[random].url,
+            name: "❄️ Regarde Arctyx Esport en direct !",
+            state: "Viens soutenir l'équipe !",
+            type: ActivityType.Streaming,
+            url: "https://www.twitch.tv/arctyx_esporttv",
           },
         ],
-        status: "dnd",
+        status: "online",
       });
     } else {
-      activities.nbrOfStreams = states.streamInfos.length;
-
-      if (states.streamInfos.find((stream) => stream.username === "arctyx_esporttv")) {
-        bot.user.setPresence({
-          activities: [
-            {
-              name: "❄️ Regarde Arctyx Esport en direct !",
-              state: "Viens soutenir l'équipe !",
-              type: ActivityType.Streaming,
-              url: "https://www.twitch.tv/arctyx_esporttv",
-            },
-          ],
-          status: "online",
-        });
-      } else {
-        const random = Math.floor(Math.random() * states.streamInfos.length);
-        const stream = states.streamInfos[random];
-        bot.user.setPresence({
-          activities: [
-            {
-              name: `📺 Regarde ${stream.username} en direct !`,
-              state: "Viens regarder le stream !",
-              type: ActivityType.Streaming,
-              url: `https://www.twitch.tv/${stream.username}`,
-            },
-          ],
-          status: "online",
-        });
-      }
+      const random = Math.floor(Math.random() * states.streamInfos.length);
+      const stream = states.streamInfos[random];
+      bot.user.setPresence({
+        activities: [
+          {
+            name: `📺 Regarde ${stream.username} en direct !`,
+            state: "Viens regarder le stream !",
+            type: ActivityType.Streaming,
+            url: `https://www.twitch.tv/${stream.username}`,
+          },
+        ],
+        status: "online",
+      });
     }
-  }, 30000);
+  }
 }
