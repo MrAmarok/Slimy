@@ -20,15 +20,7 @@ import { loadCommands, getDirname } from "@/utils";
 import { getUserSessions, connectDatabase } from "@/server";
 
 import { deployCommand } from "./deployCommands.js";
-
-
-
-let userSessions: UserSession = {
-  twitchToken: "",
-  twitchClientId: process.env.TWITCH_CLIENT_ID || "",
-};
-
-let streamInfos: StreamInfo[] = [];
+import { userSessions } from "@/utils/globals.js";
 
 await connectDatabase();
 await getUserSessions(userSessions);
@@ -36,7 +28,7 @@ await getUserSessions(userSessions);
 const discordToken = process.env.TOKEN || process.env.DEVTOKEN;
 
 deployCommand();
-setInterval(() => twitchCallLoop(userSessions, streamInfos, bot), 20000);
+setInterval(() => twitchCallLoop(bot), 20000);
 
 const bot = new Client({ intents: [GatewayIntentBits.Guilds] });
 declare module "discord.js" {
@@ -47,7 +39,7 @@ declare module "discord.js" {
 
 bot.once(Events.ClientReady, (readyClient) => {
   console.log(`\n🤖 Ready! Logged in as ${readyClient.user.tag}`);
-  getBotActivity(streamInfos, readyClient);
+  getBotActivity(readyClient);
 });
 
 bot.commands = new Collection();

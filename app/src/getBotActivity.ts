@@ -1,6 +1,5 @@
-import { StreamInfo, UserSession } from "@/types";
 import { ActivityType, Client } from "discord.js";
-import { stat } from "fs";
+import { states, userSessions } from "@/utils/globals.js";
 
 const activities = {
   lastActivity: 0,
@@ -42,12 +41,12 @@ const activities = {
   nbrOfStreams: 0,
 };
 
-export function getBotActivity(streamInfo: StreamInfo[], bot: Client<true>) {
+export function getBotActivity(bot: Client<true>) {
   let random = Math.floor(Math.random() * activities.content.length);
-  console.log(streamInfo.length);
+  console.log(states.streamInfos.length);
   setInterval(async () => {
-    console.log(streamInfo.length);
-    if (streamInfo.length === 0) {
+    console.log(states.streamInfos.length);
+    if (states.streamInfos.length === 0) {
       if (activities.nbrOfStreams !== 0) {
         activities.nbrOfStreams = 0;
         random = activities.lastActivity;
@@ -68,9 +67,9 @@ export function getBotActivity(streamInfo: StreamInfo[], bot: Client<true>) {
         status: "dnd",
       });
     } else {
-      activities.nbrOfStreams = streamInfo.length;
+      activities.nbrOfStreams = states.streamInfos.length;
 
-      if (streamInfo.find((stream) => stream.username === "arctyx_esporttv")) {
+      if (states.streamInfos.find((stream) => stream.username === "arctyx_esporttv")) {
         bot.user.setPresence({
           activities: [
             {
@@ -83,8 +82,8 @@ export function getBotActivity(streamInfo: StreamInfo[], bot: Client<true>) {
           status: "online",
         });
       } else {
-        const random = Math.floor(Math.random() * streamInfo.length);
-        const stream = streamInfo[random];
+        const random = Math.floor(Math.random() * states.streamInfos.length);
+        const stream = states.streamInfos[random];
         bot.user.setPresence({
           activities: [
             {

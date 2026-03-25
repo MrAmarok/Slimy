@@ -3,17 +3,15 @@ import {
   updateSocialMediaMessageSend,
 } from "@/database";
 import { refreshTwitchToken } from "@/server/session.js";
-import { StreamInfo, UserSession } from "@/types";
 import { twitchMessageAnnonce } from "@/components/twitchMessageAnnonce.js";
 import { Client, TextChannel } from "discord.js";
+import { states, userSessions} from "@/utils/globals.js";
 
 export async function twitchCallLoop(
-  userSessions: UserSession,
-  streamInfos: StreamInfo[],
   client: Client,
 ) {
   const twitchInfo = await getSocialMediaByPlatform("twitch");
-  streamInfos = streamInfos.filter((info) => {
+  states.streamInfos = states.streamInfos.filter((info) => {
     return twitchInfo.some((s) => s.username === info.username);
   });
   const results = await Promise.all(
@@ -35,14 +33,14 @@ export async function twitchCallLoop(
         return true;
       } else if (data.data && data.data.length === 0 && info.message_sended) {
         await updateSocialMediaMessageSend(info.username, false);
-        if (streamInfos.some((stream) => stream.username === info.username)) {
-          streamInfos = streamInfos.filter(
+        if (states.streamInfos.some((stream) => stream.username === info.username)) {
+          states.streamInfos = states.streamInfos.filter(
             (stream) => stream.username !== info.username,
           );
         }
         return true;
       } else if (data.data && data.data.length > 0 && !info.message_sended) {
-        streamInfos.push({
+        states.streamInfos.push({
           username: info.username,
           link: `https://www.twitch.tv/${info.username}`,
           title: data.data[0].title,

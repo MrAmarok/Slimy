@@ -18,6 +18,7 @@
       "@/types": ["./app/types/index.ts"],
       "@/types/*": ["./app/types/*"],
       "@/utils": ["./app/utils/index.ts"],
+      "@/utils/*": ["./app/utils/*"],
       "@/components": ["./app/components/index.ts"],
       "@/components/*": ["./app/components/*"],
       "@/src": ["./app/src/index.ts"],
