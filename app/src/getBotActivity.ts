@@ -42,7 +42,6 @@ const activities = {
 };
 
 export function getBotActivity(bot: Client<true>, random: number) {
-  console.log("states.streamInfos.length: ", states.streamInfos.length);
   if (states.streamInfos.length === 0) {
     if (activities.nbrOfStreams !== 0) {
       activities.nbrOfStreams = 0;

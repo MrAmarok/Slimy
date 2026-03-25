@@ -13,7 +13,7 @@ export async function addSocialMedia(
   if (!res || res.rowCount === 0)
     return {
       success: false,
-      message: "Failed to add social media entry, user already exists.",
+      message: "\n❌ Failed to add social media entry, user already exists.",
     };
   return { success: true, message: "Social media entry added successfully." };
 }
@@ -82,7 +82,7 @@ export async function updateSocialMediaMessage(
     username,
   ]);
   if (!res || res.rowCount === 0) {
-    console.warn(`Failed to update message for username: ${username}`);
+    console.warn(`\n❌ Failed to update message for username: ${username}`);
     return false;
   }
   return true;
@@ -97,7 +97,7 @@ export async function updateSocialMediaMessageSend(
     username,
   ]);
   if (!res || res.rowCount === 0) {
-    console.warn(`Failed to update message_sended for username: ${username}`);
+    console.warn(`\n❌ Failed to update message_sended for username: ${username}`);
     return false;
   }
   return true;
@@ -112,7 +112,7 @@ export async function updateSocialMediaChannel(
     username,
   ]);
   if (!res || res.rowCount === 0) {
-    console.warn(`Failed to update channel_id for username: ${username}`);
+    console.warn(`\n❌ Failed to update channel_id for username: ${username}`);
     return false;
   }
   return true;
@@ -127,7 +127,7 @@ export async function updateSocialMediaPlatform(
     username,
   ]);
   if (!res || res.rowCount === 0) {
-    console.warn(`Failed to update platform for username: ${username}`);
+    console.warn(`\n❌ Failed to update platform for username: ${username}`);
     return false;
   }
   return true;
@@ -142,7 +142,7 @@ export async function updateSocialMediaUsername(
     oldUsername,
   ]);
   if (!res || res.rowCount === 0) {
-    console.warn(`Failed to update username for username: ${oldUsername}`);
+    console.warn(`\n❌ Failed to update username for username: ${oldUsername}`);
     return false;
   }
   return true;
@@ -162,7 +162,7 @@ export async function updateAllSocialMediaInformation(
     ],
   );
   if (!res || res.rowCount === 0) {
-    console.warn(`Failed to update all information for username: ${oldUsername}`);
+    console.warn(`\n❌ Failed to update all information for username: ${oldUsername}`);
     return false;
   }
   return true;
@@ -172,7 +172,7 @@ export async function updateAllSocialMediaInformation(
 export async function deleteSocialMedia(username: string): Promise<boolean> {
   const res = await query("DELETE FROM social_media WHERE username = $1", [username]);
   if (!res || res.rowCount === 0) {
-    console.warn(`Failed to delete social media entry for username: ${username}`);
+    console.warn(`\n❌ Failed to delete social media entry for username: ${username}`);
     return false;
   }
   return true;
