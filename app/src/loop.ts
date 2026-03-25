@@ -3,12 +3,13 @@ import {
   updateSocialMediaMessageSend,
 } from "@/database";
 import { refreshTwitchToken } from "@/server/session.js";
-import { UserSession } from "@/types";
+import { StreamInfo, UserSession } from "@/types";
 import { twitchMessageAnnonce } from "@/components/twitchMessageAnnonce.js";
 import { Client, TextChannel } from "discord.js";
 
 export async function twitchCallLoop(
   userSessions: UserSession,
+  streamInfos: StreamInfo[],
   client: Client,
 ) {
   const twitchInfo = await getSocialMediaByPlatform("twitch");
@@ -27,16 +28,27 @@ export async function twitchCallLoop(
       if (!res.ok) return false;
       const data = await res.json();
 
-      if (data.data && data.data.length === 0 && info.message_sended) {
+      if (data.data && data.data.length === 0 && !info.message_sended) {
+        return true;
+      } else if (data.data && data.data.length === 0 && info.message_sended) {
         await updateSocialMediaMessageSend(info.username, false);
+        if (streamInfos.some((stream) => stream.username === info.username)) {
+          streamInfos = streamInfos.filter(
+            (stream) => stream.username !== info.username,
+          );
+        }
         return true;
-      } else if (data.data && data.data.length === 0 && !info.message_sended)
-        return true;
-
-      if (data.data && data.data.length > 0 && !info.message_sended) {
+      } else if (data.data && data.data.length > 0 && !info.message_sended) {
+        streamInfos.push({
+          username: info.username,
+          link: `https://www.twitch.tv/${info.username}`,
+          title: data.data[0].title,
+        });
         await updateSocialMediaMessageSend(info.username, true);
-        const message = twitchMessageAnnonce({... data.data[0], bot_name: client.user?.username || "Slimy Bot"});
-        
+        const message = twitchMessageAnnonce({
+          ...data.data[0],
+          bot_name: client.user?.username || "Slimy Bot",
+        });
         client.channels.fetch(info.channel_id).then((channel) => {
           if (channel && channel.isTextBased()) {
             (channel as TextChannel).send({
@@ -45,7 +57,7 @@ export async function twitchCallLoop(
             });
           }
         });
-        
+
         console.log(`\n📢 ${info.username} is live! Announcement sent.`);
         return true;
       }

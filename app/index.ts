@@ -1,31 +1,42 @@
 import "dotenv/config";
-import { Client, GatewayIntentBits, Events, Collection } from "discord.js";
+import {
+  Client,
+  GatewayIntentBits,
+  Events,
+  Collection,
+  ActivityType,
+} from "discord.js";
 
 import {
   twitchCallLoop,
   chatInputInteraction,
   stringSelectMenuInteraction,
   modalSubmitInteraction,
+  getBotActivity
 } from "@/src";
 
-import { SlashCommand, UserSession } from "@/types";
+import { SlashCommand, StreamInfo, UserSession } from "@/types";
 import { loadCommands, getDirname } from "@/utils";
 import { getUserSessions, connectDatabase } from "@/server";
 
 import { deployCommand } from "./deployCommands.js";
+
+
 
 let userSessions: UserSession = {
   twitchToken: "",
   twitchClientId: process.env.TWITCH_CLIENT_ID || "",
 };
 
+let streamInfos: StreamInfo[] = [];
+
 await connectDatabase();
 await getUserSessions(userSessions);
 
-const discordToken =  process.env.TOKEN || process.env.DEVTOKEN;
+const discordToken = process.env.TOKEN || process.env.DEVTOKEN;
 
 deployCommand();
-setInterval(() => twitchCallLoop(userSessions, bot), 6000);
+setInterval(() => twitchCallLoop(userSessions, streamInfos, bot), 6000);
 
 const bot = new Client({ intents: [GatewayIntentBits.Guilds] });
 declare module "discord.js" {
@@ -36,6 +47,7 @@ declare module "discord.js" {
 
 bot.once(Events.ClientReady, (readyClient) => {
   console.log(`\n🤖 Ready! Logged in as ${readyClient.user.tag}`);
+  getBotActivity(streamInfos, readyClient);
 });
 
 bot.commands = new Collection();
