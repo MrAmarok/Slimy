@@ -13,6 +13,9 @@ export async function twitchCallLoop(
   client: Client,
 ) {
   const twitchInfo = await getSocialMediaByPlatform("twitch");
+  streamInfos = streamInfos.filter((info) => {
+    return twitchInfo.some((s) => s.username === info.username);
+  });
   const results = await Promise.all(
     twitchInfo.map(async (info) => {
       const res = await fetch(

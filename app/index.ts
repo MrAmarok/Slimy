@@ -36,7 +36,7 @@ await getUserSessions(userSessions);
 const discordToken = process.env.TOKEN || process.env.DEVTOKEN;
 
 deployCommand();
-setInterval(() => twitchCallLoop(userSessions, streamInfos, bot), 6000);
+setInterval(() => twitchCallLoop(userSessions, streamInfos, bot), 20000);
 
 const bot = new Client({ intents: [GatewayIntentBits.Guilds] });
 declare module "discord.js" {

@@ -97,5 +97,5 @@ export function getBotActivity(streamInfo: StreamInfo[], bot: Client<true>) {
         });
       }
     }
-  }, 5000);
+  }, 30000);
 }
