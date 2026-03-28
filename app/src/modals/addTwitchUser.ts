@@ -6,10 +6,19 @@ export async function addTwitchUser(interaction: ModalSubmitInteraction) {
   try {
     const { twitchUsername, channelId, messageContent } = {
       twitchUsername: interaction.fields.getTextInputValue("username_input"),
-      channelId:
-        interaction.fields.getStringSelectValues("channel_selector")[0],
+      channelId: interaction.fields
+        .getSelectedChannels("channel_selector")
+        ?.first()?.id,
       messageContent: interaction.fields.getTextInputValue("message_input"),
     };
+
+    if (!channelId) {
+      await interaction.reply({
+        content: "❌ Please select a valid channel!",
+        flags: MessageFlags.Ephemeral,
+      });
+      return;
+    }
 
     const data: CreateSocialMediaEntry = {
       platform: "twitch",
@@ -19,7 +28,6 @@ export async function addTwitchUser(interaction: ModalSubmitInteraction) {
     };
 
     const response = await addSocialMedia(data);
-
     if (response.success == false) {
       await interaction.reply({
         content: `❌ Failed to save Twitch announcement: ${response.message}`,
@@ -29,7 +37,7 @@ export async function addTwitchUser(interaction: ModalSubmitInteraction) {
     }
 
     await interaction.reply({
-      content: `✅ Twitch announcement saved for: ${twitchUsername} with message: ${messageContent} `,
+      content: `✅ Twitch announcement saved for: **${twitchUsername}** with message: "${messageContent}" in <#${channelId}>`,
       flags: MessageFlags.Ephemeral,
     });
   } catch (error) {

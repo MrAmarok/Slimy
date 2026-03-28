@@ -1,16 +1,10 @@
 import { modalTwitch } from "@/components";
 import { MessageFlags, StringSelectMenuInteraction } from "discord.js";
 
-export async function socialMedia(
-  interaction: StringSelectMenuInteraction,
-) {
+export async function socialMedia(interaction: StringSelectMenuInteraction) {
   try {
     const selectedStyle = interaction.values[0];
-    const modal = await modalTwitch(
-      selectedStyle,
-      interaction.client,
-      interaction.guildId!,
-    );
+    const modal = await modalTwitch(selectedStyle);
     await interaction.showModal(modal);
   } catch (error) {
     console.error(error);

@@ -8,8 +8,6 @@ export async function updateTwitch(
     const selectedUsername = interaction.values[0];
     const modal = await modalTwitch(
       "twitch",
-      interaction.client,
-      interaction.guildId!,
       selectedUsername
     );
     await interaction.showModal(modal);

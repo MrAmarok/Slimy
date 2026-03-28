@@ -1,26 +1,20 @@
 import {
+  ChannelSelectMenuBuilder, // <-- Nouvel import
   ChannelType,
   Client,
   LabelBuilder,
   ModalBuilder,
-  StringSelectMenuBuilder,
   TextInputBuilder,
   TextInputStyle,
 } from "discord.js";
 
-import { getGuildChannels } from "@/utils";
+// Tu n'as plus besoin d'importer getChannelsWhereICanWrite ici
+// car Discord s'occupe d'afficher tous les salons nativement.
 
 export async function modalTwitch(
   selectedStyle: string,
-  client: Client,
-  guildId: string,
   username?: string,
 ) {
-  const channels = await getGuildChannels(client, guildId);
-  if (!channels) {
-    throw new Error("Unable to fetch channels for the guild.");
-  }
-
   let modal: ModalBuilder;
   let usernameLabel: LabelBuilder;
 
@@ -52,29 +46,25 @@ export async function modalTwitch(
       .setValue(username);
 
     usernameLabel = new LabelBuilder()
-      .setLabel(`Update ${username} announcement for ${selectedStyle}`)
+      .setLabel(`Update ${username.slice(0, 15)} on ${selectedStyle}`)
       .setDescription(
         "Enter your username for the selected social media platform.",
       )
       .setTextInputComponent(usernameInput);
   }
 
-  const channelSelector = new StringSelectMenuBuilder()
+  const channelSelector = new ChannelSelectMenuBuilder()
     .setCustomId("channel_selector")
     .setPlaceholder("Select a channel to post the announcement")
-    .addOptions(
-      channels.map((channel) => ({
-        label: channel.name,
-        value: channel.id,
-      })),
-    );
+    .addChannelTypes(ChannelType.GuildText, ChannelType.GuildAnnouncement);
 
   const channelLabel = new LabelBuilder()
     .setLabel(`Where to post announcement?`)
     .setDescription(
       "Select the channel where you want to post the announcement.",
     )
-    .setStringSelectMenuComponent(channelSelector);
+    .setChannelSelectMenuComponent(channelSelector); 
+
 
   const messageInput = new TextInputBuilder()
     .setCustomId("message_input")

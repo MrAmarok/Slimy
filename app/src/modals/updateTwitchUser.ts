@@ -26,10 +26,17 @@ export async function updateTwitchUserModal(
     const { twitchUsername, channelId, messageContent } = {
       twitchUsername: interaction.fields.getTextInputValue("username_input"),
       channelId:
-        interaction.fields.getStringSelectValues("channel_selector")[0],
+        interaction.fields.getSelectedChannels("channel_selector")?.first()?.id,
       messageContent: interaction.fields.getTextInputValue("message_input"),
     };
 
+    if (!channelId) {
+      await interaction.reply({
+        content: "❌ Please select a valid channel!",
+        flags: MessageFlags.Ephemeral,
+      });
+      return;
+    }
     const data: UpdateSocialMediaEntry = {
       platform: selectedStyle,
       message_sended: false,
