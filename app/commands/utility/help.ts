@@ -5,7 +5,7 @@ import { embedMessageBuilder } from "@/components/embedMessageBuilder.js";
 const help = (): SlashCommand => {
   const data = new SlashCommandBuilder()
     .setName("help")
-    .setDescription("Command of Slimy");
+    .setDescription("Display the list of available commands.");
 
   async function execute(
     interaction: ChatInputCommandInteraction,
