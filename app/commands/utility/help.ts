@@ -62,7 +62,7 @@ function messageBuilder(username: string): TEmbedMessageBuilder {
     ],
     color: "#54e600",
     footer: {
-      text: `${username} - Your friendly Twitch bot!`,
+      text: `${username} - created by github/MrAmarok`,
     },
   };
   return message;
