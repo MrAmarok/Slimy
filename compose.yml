@@ -32,7 +32,10 @@ services:
       TWITCH_CLIENT_ID: ${TWITCH_CLIENT_ID}
       TWITCH_CLIENT_SECRET: ${TWITCH_CLIENT_SECRET}
     depends_on:
-      - database
+      database:
+        condition: service_healthy
 
 volumes:
   slimy_data:
+    external: true
+    name: o9rrs1ixsvab44h5v89h5x4i_slimy-data
