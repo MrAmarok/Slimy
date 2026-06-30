@@ -11,10 +11,18 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "paths": {
-      "@/database": ["./app/database/index.ts"],
+      "@/database": ["./app/server/database/index.ts"],
+      "@/database/*": ["./app/server/database/*"],
+      "@/server": ["./app/server/index.ts"],
+      "@/server/*": ["./app/server/*"],
       "@/types": ["./app/types/index.ts"],
+      "@/types/*": ["./app/types/*"],
       "@/utils": ["./app/utils/index.ts"],
+      "@/utils/*": ["./app/utils/*"],
       "@/components": ["./app/components/index.ts"],
+      "@/components/*": ["./app/components/*"],
+      "@/src": ["./app/src/index.ts"],
+      "@/src/*": ["./app/src/*"],
       "@/asset/*": ["./asset/*"]
     }
   },

@@ -5,14 +5,12 @@ USER appuser
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY --chown=appuser:appgroup package*.json ./
 
 RUN npm install
 
-COPY . .
+COPY --chown=appuser:appgroup . .
 
 RUN npm run build
 
-
 CMD ["npm", "run", "start"]
-

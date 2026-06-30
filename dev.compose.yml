@@ -12,7 +12,11 @@ services:
     ports:
       - "${POSTGRES_PORT}:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} -h localhost"]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} -h localhost",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -21,21 +25,15 @@ services:
     build: .
     container_name: slimy-bot
     restart: unless-stopped
-    dns:
-      - 8.8.8.8
-      - 1.1.1.1
     environment:
-      TOKEN: ${TOKEN}
-      APPID: ${APPID}
+      DEVTOKEN: ${DEVTOKEN}
+      DEVAPPID: ${DEVAPPID}
       GUILDID: ${GUILDID}
       POSTGRES_URL: ${POSTGRES_URL}
       TWITCH_CLIENT_ID: ${TWITCH_CLIENT_ID}
       TWITCH_CLIENT_SECRET: ${TWITCH_CLIENT_SECRET}
     depends_on:
-      database:
-        condition: service_healthy
+      - database
 
 volumes:
   slimy_data:
-    external: true
-    name: o9rrs1ixsvab44h5v89h5x4i_slimy-data

@@ -1,23 +1,36 @@
+import "dotenv/config";
 import {
   Client,
   GatewayIntentBits,
   Events,
   Collection,
-  MessageFlags,
+  ActivityType,
 } from "discord.js";
 
-import { SlashCommand } from "@/types";
+import {
+  twitchCallLoop,
+  chatInputInteraction,
+  stringSelectMenuInteraction,
+  modalSubmitInteraction,
+  getBotActivity,
+} from "@/src";
+
+import { SlashCommand, StreamInfo, UserSession } from "@/types";
 import { loadCommands, getDirname } from "@/utils";
+import { getUserSessions, connectDatabase } from "@/server";
 
 import { deployCommand } from "./deployCommands.js";
+import { userSessions } from "@/utils/globals.js";
 
+await connectDatabase();
+await getUserSessions(userSessions);
 
-import "dotenv/config";
+const discordToken = process.env.TOKEN || process.env.DEVTOKEN;
 
 deployCommand();
+setInterval(() => twitchCallLoop(bot), 60000);
 
 const bot = new Client({ intents: [GatewayIntentBits.Guilds] });
-
 declare module "discord.js" {
   interface Client {
     commands: Collection<string, SlashCommand>;
@@ -25,7 +38,10 @@ declare module "discord.js" {
 }
 
 bot.once(Events.ClientReady, (readyClient) => {
-  console.log(`✅ Ready! Logged in as ${readyClient.user.tag}`);
+  console.log(`\n🤖 Ready! Logged in as ${readyClient.user.tag}`);
+  let random = Math.floor(Math.random() * 5);
+  getBotActivity(readyClient, random);
+  setInterval(() => getBotActivity(readyClient, random), 40000);
 });
 
 bot.commands = new Collection();
@@ -41,32 +57,13 @@ for (const command of loadedCommands) {
 }
 
 bot.on(Events.InteractionCreate, async (interaction) => {
-  if (!interaction.isChatInputCommand()) return;
-
-  const command = interaction.client.commands.get(interaction.commandName);
-  if (!command) {
-    console.error(
-      `❌ No command matching ${interaction.commandName} was found.`
-    );
-    return;
-  }
-
-  try {
-    await command.execute(interaction);
-  } catch (error) {
-    console.error(error);
-    if (interaction.replied || interaction.deferred) {
-      await interaction.followUp({
-        content: "There was an error while executing this command!",
-        flags: MessageFlags.Ephemeral,
-      });
-    } else {
-      await interaction.reply({
-        content: "There was an error while executing this command!",
-        flags: MessageFlags.Ephemeral,
-      });
-    }
+  if (interaction.isChatInputCommand()) {
+    await chatInputInteraction(interaction);
+  } else if (interaction.isStringSelectMenu()) {
+    await stringSelectMenuInteraction(interaction);
+  } else if (interaction.isModalSubmit()) {
+    await modalSubmitInteraction(interaction);
   }
 });
 
-bot.login(process.env.DEVTOKEN);
+bot.login(discordToken);

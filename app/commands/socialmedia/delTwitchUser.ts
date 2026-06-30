@@ -1,0 +1,48 @@
+import { 
+  SlashCommandBuilder, 
+  ChatInputCommandInteraction,
+  ActionRowBuilder,
+  StringSelectMenuBuilder,
+  StringSelectMenuOptionBuilder,
+  MessageFlags,
+  PermissionFlagsBits
+} from "discord.js";
+import { getSocialMediaByPlatform } from "@/database/tables/socialMedia.js";
+import { SlashCommand } from "@/types";
+
+function delTwitchUser(): SlashCommand {
+  const data = new SlashCommandBuilder()
+    .setName("twitch_del_user")
+    .setDescription("Delete a Twitch user from the database")
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
+
+  async function execute(
+    interaction: ChatInputCommandInteraction
+  ): Promise<void> {
+    const res = await getSocialMediaByPlatform("twitch");
+    
+    const selectMenu = new StringSelectMenuBuilder()
+      .setCustomId("del_twitch_user_selector")
+      .setPlaceholder("Choose Twitch user to delete...")
+      .setMaxValues(res.length)
+      .addOptions(
+        ...res.map(entry => new StringSelectMenuOptionBuilder()
+            .setLabel(entry.username)
+            .setDescription(`Channel ID: ${entry.channel_id}`)
+            .setValue(entry.username)
+            .setEmoji("📺")
+        )
+      );
+
+    const row = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(selectMenu);
+
+    await interaction.reply({
+      components: [row],
+      flags: MessageFlags.Ephemeral, 
+    });
+  }
+
+  return { data: data, execute };
+}
+
+export default delTwitchUser();
